@@ -1,0 +1,58 @@
+stages:
+  - stop
+  - build
+  - start
+
+docker-compose-stop:
+  script:
+    - docker-compose  -f docker/docker-compose-run.server.yml -p siya-blog stop
+  only:
+    - master
+    - ci
+  stage: stop
+  allow_failure: true
+  variables:
+    GIT_STRATEGY: none
+
+docker-compose-build:
+  script:
+    - mkdir -p /data/siya-blog/volumes/storage
+    - cp -r storage/* /data/siya-blog/volumes/storage
+    - docker-compose  -f docker/docker-compose-build.server.yml -p siya-blog up --build --abort-on-container-exit
+    - docker-compose  -f docker/docker-compose-build.server.yml -p siya-blog stop
+    - chown -R www-data:www-data /data/siya-blog
+    - chown -R www-data:www-data ./
+  only:
+    - master
+    - ci
+  stage: build
+  environment:
+    name: staging
+    url: http://siya89.com
+
+
+
+docker-compose-up:
+  script:
+    - docker-compose  -f docker/docker-compose-run.server.yml -p siya-blog up -d
+  only:
+    - master
+    - ci
+  stage: start
+  variables:
+    GIT_STRATEGY: none
+  environment:
+    name: staging
+    url: http://siya89.com
+
+
+nginx-setting:
+  script:
+    - cp host.nginx.conf /etc/nginx/sites-enabled/siya-blog.conf
+    - service nginx reload
+  only:
+    - master
+    - ci
+  stage: build
+  variables:
+    GIT_STRATEGY: none

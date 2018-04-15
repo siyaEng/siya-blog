@@ -1,0 +1,29 @@
+version: '3'
+services:
+  db:
+    container_name: siya-blog-db
+    image: mysql
+    volumes:
+      - /data/siya-blog/volumes/mysql:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=NuwJYK4s4MGpbY
+      - MYSQL_DATABASE=siya-blog
+      - MYSQL_USER=siya-blog
+      - MYSQL_PASSWORD=AFrokRANYodgYqfdnCpHc4RA
+      - TZ=Asia/Shanghai
+    ports:
+      - "33066:3306"
+    command: mysqld --character-set-server=utf8 --collation-server=utf8_general_ci
+
+  php:
+    container_name: siya-blog-php
+    build: ./
+    volumes:
+      - ../:/var/www/html
+      - /data/siya-blog/volumes/storage:/var/www/html/storage
+      - /data/siya-blog/volumes/vendor:/var/www/html/vendor
+      - /data/siya-blog/volumes/nginx/logs:/var/log/nginx
+    environment:
+      TZ: Asia/Shanghai
+    ports:
+      - "8099:80"
