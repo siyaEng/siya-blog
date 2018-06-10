@@ -1,10 +1,10 @@
-FROM php:7.1-fpm
+FROM php:7.1-fpm-jessie
 ADD sources.list /etc/apt/
 RUN apt-get update
 RUN apt-get install -y nginx
 RUN apt-get install -y git zip mcrypt
 RUN apt-get install -y libpq-dev
-RUN apt-get install -y libfreetype6-dev libjpeg62-turbo-dev libpng12-dev libmcrypt-dev 
+RUN apt-get install -y libfreetype6-dev libjpeg62-turbo-dev libpng12-dev libmcrypt-dev
 RUN docker-php-ext-install exif
 RUN docker-php-ext-install pgsql && \
     docker-php-ext-install pdo_pgsql
@@ -16,11 +16,11 @@ RUN php -r "copy('https://install.phpcomposer.com/installer', 'composer-setup.ph
 	&& php composer-setup.php \
 	&& php -r "unlink('composer-setup.php');" \
 	&& mv composer.phar /bin/composer \
-	&& composer global require "fxp/composer-asset-plugin:^1.3.1" 
+	&& composer global require "fxp/composer-asset-plugin:^1.3.1"
 RUN composer config -g repo.packagist composer https://packagist.phpcomposer.com
-RUN apt-get install -y cron 
-ADD cronfile /etc/cron.d/cronfile 
-RUN crontab /etc/cron.d/cronfile 
+RUN apt-get install -y cron
+ADD cronfile /etc/cron.d/cronfile
+RUN crontab /etc/cron.d/cronfile
 ADD site.conf /etc/nginx/sites-enabled/default
 ENV TZ=Asia/Shanghai
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
