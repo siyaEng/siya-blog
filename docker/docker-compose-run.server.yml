@@ -2,7 +2,7 @@ version: '3'
 services:
   db:
     container_name: siya-blog-db
-    image: mysql
+    image: mysql:8.0
     volumes:
       - /data/siya-blog/volumes/mysql:/var/lib/mysql
     environment:
