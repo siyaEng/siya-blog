@@ -25,5 +25,11 @@ services:
       - /data/siya-blog/volumes/nginx/logs:/var/log/nginx
     environment:
       TZ: Asia/Shanghai
+    networks:
+      - blog-php
     ports:
       - "8099:80"
+
+  networks:
+    blog-php:
+      driver: host
