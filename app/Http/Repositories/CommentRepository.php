@@ -87,13 +87,12 @@ class CommentRepository extends Repository
             $comment->username = $user->name;
             $comment->email = $user->email;
         } else {
-            $comment->username = $request->get('username');
-            $comment->email = $request->get('email');
-            $comment->site = $request->get('site');
+            return false;
         }
 
         $content = $request->get('content');
         $comment->ip_id = $request->ip();
+        dd($comment->ip_id);
         $comment->content = $this->mention->parse($content);
         $comment->html_content = $this->markdownParser->parse($comment->content);
         $result = $commentable->comments()->save($comment);
