@@ -56,9 +56,13 @@ class CommentController extends Controller
                 );
             }
         }
-
-        if ($comment = $this->commentRepository->create($request))
+        $comment = $this->commentRepository->create($request);
+        if ($comment) {
             return response()->json(['status' => 200, 'msg' => 'success']);
+        } else if ($comment == false) {
+            return response()->json(['status' => 500, 'msg' => '请注册一个用户，然后你就可以评论了!   please register a user and then you can comment!']);
+        }
+
         return response()->json(['status' => 500, 'msg' => 'failed']);
     }
 
