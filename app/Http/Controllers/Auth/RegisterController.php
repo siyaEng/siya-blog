@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Repositories\UserRepository;
 use App\User;
 use Illuminate\Http\Request;
+use Mews\Captcha\Captcha;
 
 class RegisterController extends Controller
 {
@@ -17,7 +18,6 @@ class RegisterController extends Controller
         $this->userRepository = $userRepository;
         $this->middleware('guest');
     }
-
 
     public function showRegistrationForm()
     {
@@ -31,8 +31,11 @@ class RegisterController extends Controller
             'name' => 'required|max:16|min:3|unique:users',
             'email' => 'required|email|max:255|unique:users',
             'password' => 'required|min:6|confirmed',
+            'captcha' => ['required', 'captcha'],
         ],[
             'name.regex' => "Username can only contains letter,number or -,_",
+            'captcha.required' => '验证码不能为空',
+            'captcha.captcha' => '请输入正确的验证码',
         ]);
 
         if (mb_substr_count($request->get('name'), '_') > 1 || mb_substr_count($request->get('name'), '-') > 1) {
