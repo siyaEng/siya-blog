@@ -20,8 +20,6 @@ services:
     build: ./
     volumes:
       - ../:/var/www/html
-      - /data/siya-blog/volumes/storage:/var/www/html/storage
-      - /data/siya-blog/volumes/nginx/logs:/var/log/nginx
     environment:
       TZ: Asia/Shanghai
     ports:
